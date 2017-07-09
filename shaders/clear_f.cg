@@ -1,0 +1,6 @@
+void main(
+	uniform float4 u_clear_color,
+	out float4 out_color : COLOR)
+{
+	out_color = u_clear_color;
+}

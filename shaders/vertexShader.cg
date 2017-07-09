@@ -1,0 +1,13 @@
+void main(
+	float3 position,
+	float2 textureCoords,
+	uniform float4x4 transformationMatrix,
+	uniform float4x4 viewMatrix,
+	uniform float4x4 projectionMatrix,
+	out float4 out_position : POSITION,
+    out float2 pass_textureCoords : TEXCOORD0)
+{
+	float4x4 mvp = mul(projectionMatrix, mul(viewMatrix, transformationMatrix));
+	out_position = mul(mvp, float4(position, 1.0f));
+    pass_textureCoords = textureCoords;
+}

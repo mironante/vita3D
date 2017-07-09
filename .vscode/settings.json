@@ -1,0 +1,22 @@
+{
+    "files.associations": {
+        "main.c": "cpp",
+        "utils.c": "cpp",
+        "cstdint": "cpp",
+        "cstdlib": "cpp",
+        "limits": "cpp",
+        "initializer_list": "cpp",
+        "*.tcc": "cpp",
+        "cctype": "cpp",
+        "clocale": "cpp",
+        "cstdio": "cpp",
+        "cwchar": "cpp",
+        "exception": "cpp",
+        "iosfwd": "cpp",
+        "new": "cpp",
+        "type_traits": "cpp",
+        "typeinfo": "cpp",
+        "cmath": "cpp",
+        "math_utils.c": "cpp"
+    }
+}
