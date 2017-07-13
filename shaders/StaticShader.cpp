@@ -62,6 +62,8 @@ namespace Shaders
         location_viewMatrix = getUniformLocation(vertexProgram, fragmentProgram, "viewMatrix", true);
         location_lightPosition = getUniformLocation(vertexProgram, fragmentProgram, "lightPosition", true);
         location_lightColor = getUniformLocation(vertexProgram, fragmentProgram, "lightColor", true);
+        location_shineDamper = getUniformLocation(vertexProgram, fragmentProgram, "shineDamper", true);
+        location_reflectivity = getUniformLocation(vertexProgram, fragmentProgram, "reflectivity", true);
     }
 
     void StaticShader::loadTransformationMatrix(SceGxmContext* context, matrix4x4 matrix)
@@ -88,5 +90,11 @@ namespace Shaders
     {
         loadVector(context, location_lightPosition, light->getPosition(), true);
         loadVector(context, location_lightColor, light->getColor(), true);
+    }
+
+    void StaticShader::loadShineVariables(SceGxmContext* context, float damper, float reflectivity)
+    {
+        loadFloat(context, location_shineDamper, damper);
+        loadFloat(context, location_reflectivity, reflectivity);
     }
 }

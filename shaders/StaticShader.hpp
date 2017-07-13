@@ -21,6 +21,7 @@ namespace Shaders
         void loadProjectionMatrix(SceGxmContext* context, matrix4x4 projection);
         void loadViewMatrix(SceGxmContext* context, Camera* camera);
         void loadLight(SceGxmContext* context, Light* light);
+        void loadShineVariables(SceGxmContext* context, float damper, float reflectivity);
     private:
         SceGxmVertexAttribute* bindAttributes(const SceGxmProgram* vertexProgram, const SceGxmProgram* fragmentProgram, 
             unsigned int* attributeCount, SceGxmVertexStream* vertexStream);
@@ -37,6 +38,8 @@ namespace Shaders
         const SceGxmProgramParameter* location_viewMatrix;
         const SceGxmProgramParameter* location_lightPosition;
         const SceGxmProgramParameter* location_lightColor;
+        const SceGxmProgramParameter* location_shineDamper;
+        const SceGxmProgramParameter* location_reflectivity;
     };
 }
 

@@ -1,3 +1,33 @@
+float4x4 inverse(float4x4 input)
+{
+	#define minor(a,b,c) determinant(float3x3(input.a, input.b, input.c))
+	//determinant(float3x3(input._22_23_23, input._32_33_34, input._42_43_44))
+
+	float4x4 cofactors = float4x4(
+		minor(_22_23_24, _32_33_34, _42_43_44), 
+		-minor(_21_23_24, _31_33_34, _41_43_44),
+		minor(_21_22_24, _31_32_34, _41_42_44),
+		-minor(_21_22_23, _31_32_33, _41_42_43),
+
+		-minor(_12_13_14, _32_33_34, _42_43_44),
+		minor(_11_13_14, _31_33_34, _41_43_44),
+		-minor(_11_12_14, _31_32_34, _41_42_44),
+		minor(_11_12_13, _31_32_33, _41_42_43),
+
+		minor(_12_13_14, _22_23_24, _42_43_44),
+		-minor(_11_13_14, _21_23_24, _41_43_44),
+		minor(_11_12_14, _21_22_24, _41_42_44),
+		-minor(_11_12_13, _21_22_23, _41_42_43),
+
+		-minor(_12_13_14, _22_23_24, _32_33_34),
+		minor(_11_13_14, _21_23_24, _31_33_34),
+		-minor(_11_12_14, _21_22_24, _31_32_34),
+		minor(_11_12_13, _21_22_23, _31_32_33)
+	);
+	#undef minor
+	return transpose(cofactors) / determinant(input);
+}
+
 void main(
 	float3 position : POSITION,
 	float2 textureCoords : TEXCOORD0,
@@ -7,9 +37,12 @@ void main(
 	uniform float4x4 projectionMatrix,
 	uniform float3 lightPosition,
 	uniform float3 lightColor,
+	uniform float shineDamper,
+	uniform float reflectivity,
 	out float4 out_position : POSITION,
 	out float2 pass_textureCoords : TEXCOORD0,
-	out float3 diffuse : COLOR)
+	out float3 diffuse : COLOR,
+	out float3 finalSpecular: COLOR1)
 {
 	float4 inPosition = float4(position, 1.0f);
 	float4 worldPosition = mul(transformationMatrix, inPosition);
@@ -18,14 +51,23 @@ void main(
 	out_position = mul(mvp, worldPosition);
 	pass_textureCoords = textureCoords;
 
-	float3 surfaceNormal = float3(mul(transformationMatrix, float4(normal, 0.0)));
+	float3 surfaceNormal = float3(mul(transformationMatrix, float4(normal, 0.0f)));
 	float3 toLightVector = lightPosition - float3(mul(transformationMatrix, worldPosition));
+	float3 toCameraVector = float3(mul(inverse(viewMatrix), float4(0.0f, 0.0f, 0.0f, 1.0f)) - worldPosition);
 
 	float3 unitNormal = normalize(surfaceNormal);
 	float3 unitLightVector = normalize(toLightVector);
+	float3 unitVectorToCamera = normalize(toCameraVector);
+	float3 lightDirection = -unitLightVector;
+	float3 reflectedLightDirection = reflect(lightDirection, unitNormal);
+
+	float specularFactor = dot(reflectedLightDirection, unitVectorToCamera);
+	specularFactor = max(specularFactor, 0.0f);
+	float dampedFactor = pow(specularFactor, shineDamper);
+	finalSpecular = dampedFactor * reflectivity * lightColor;
 
 	float nDotl = dot(unitNormal, unitLightVector);
-	float brightness = max(nDotl, 0.0);
+	float brightness = max(nDotl, 0.0f);
 
 	diffuse = brightness * lightColor;
 

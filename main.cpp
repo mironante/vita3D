@@ -31,28 +31,33 @@ int main()
     DisplayManager* DM = new DisplayManager();
     Loader* loader = new Loader();
     Renderer* renderer = new Renderer();   
-    StaticShader* staticShader = new StaticShader(DM->getShaderPatcher());
+    StaticShader* shader = new StaticShader(DM->getShaderPatcher());
 
-    Camera* camera = new Camera();
-
-    RawModel* testModel = ObjLoader::loadObjModel("ux0:/data/assets/dragon.obj", loader);
+    RawModel* model = ObjLoader::loadObjModel("ux0:/data/assets/dragon.obj", loader);
     ModelTexture* texture = new ModelTexture(loader->loadTexture("ux0:/data/assets/dragon.png"));
-    TexturedModel* model = new TexturedModel(testModel, texture);
+    texture->setShineDamper(10);
+    texture->setReflectivity(1);
+    TexturedModel* staticModel = new TexturedModel(model, texture);
+
+    // Entity
     vector3f modelPosition;
     modelPosition.x = 0.0f;
     modelPosition.y = 0.0f;
     modelPosition.z = -25.0f;
-
-    Entity* entity = new Entity(model, modelPosition, 0.0f, 0.0f, 0.0f, 1.0f);
+    Entity* entity = new Entity(staticModel, modelPosition, 0.0f, 0.0f, 0.0f, 1.0f);
+    
+    // Light
     vector3f lightPosition;
-    lightPosition.x = 0.0f;
-    lightPosition.y = 0.0f;
-    lightPosition.z = -20.0f;
+    lightPosition.x = 200.0f;
+    lightPosition.y = 200.0f;
+    lightPosition.z = 100.0f;
     vector3f lightColor;
     lightColor.r = 1.0f;
     lightColor.g = 1.0f;
     lightColor.b = 1.0f;
     Light* light = new Light(lightPosition, lightColor);
+
+    Camera* camera = new Camera();
 
     bool done = false;
     while(!done)
@@ -71,11 +76,11 @@ int main()
         DM->startFrame();
         DM->clearScreen(0.0f, 0.0f, 0.0f, 1.0f);
 
-        staticShader->start(DM->getContext());
-        staticShader->loadLight(DM->getContext(), light);
-        staticShader->loadViewMatrix(DM->getContext(), camera);
-        renderer->render(DM->getContext(), entity, staticShader);
-        staticShader->stop();
+        shader->start(DM->getContext());
+        shader->loadLight(DM->getContext(), light);
+        shader->loadViewMatrix(DM->getContext(), camera);
+        renderer->render(DM->getContext(), entity, shader);
+        shader->stop();
         
         DM->closeFrame();
         DM->swapBuffers();
