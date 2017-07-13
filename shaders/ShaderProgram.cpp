@@ -66,12 +66,19 @@ namespace Shaders
         sceGxmSetUniformDataF(floatBuffer, location, 0, 1, &value);
     }
 
-    void ShaderProgram::loadVector(SceGxmContext * context, const SceGxmProgramParameter* location, vector3f value)
+    void ShaderProgram::loadVector(SceGxmContext * context, const SceGxmProgramParameter* location, vector3f value, bool isVertexProgram)
     {
         void* floatBuffer;
-        float vector[] = {value.x, value.y, value.z};
-        sceGxmReserveVertexDefaultUniformBuffer(context, &floatBuffer);
-        sceGxmSetUniformDataF(floatBuffer, location, 0, 3, (float *)vector);        
+        if (isVertexProgram)
+        {
+            sceGxmReserveVertexDefaultUniformBuffer(context, &floatBuffer);
+        }
+        else
+        {
+            sceGxmReserveFragmentDefaultUniformBuffer(context, &floatBuffer);
+        }
+        
+        sceGxmSetUniformDataF(floatBuffer, location, 0, 3, (float *)&value);        
     }
 
     void ShaderProgram::loadBoolean(SceGxmContext * context, const SceGxmProgramParameter* location, bool value)

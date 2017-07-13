@@ -1,5 +1,10 @@
-float4 main(float2 pass_textureCoords : TEXCOORD0,
-			uniform sampler2D textureSampler)
+float4 main(
+	float2 pass_textureCoords : TEXCOORD0,
+	float3 diffuse : COLOR,
+	uniform sampler2D textureSampler)
 {
-	return tex2D(textureSampler, pass_textureCoords);
+	float4 result1 = tex2D(textureSampler, pass_textureCoords);
+	result1 *= float4(diffuse, 1.0f);
+
+	return result1;
 }

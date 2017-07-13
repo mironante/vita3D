@@ -27,7 +27,7 @@ namespace Shaders
             unsigned int* attributeCount, SceGxmVertexStream* vertexStream) = 0;
 
         void loadFloat(SceGxmContext * context, const SceGxmProgramParameter* location, float value);
-        void loadVector(SceGxmContext * context, const SceGxmProgramParameter* location, vector3f value);
+        void loadVector(SceGxmContext * context, const SceGxmProgramParameter* location, vector3f value, bool isVertexProgram);
         void loadBoolean(SceGxmContext * context, const SceGxmProgramParameter* location, bool value);
         void loadMatrix(SceGxmContext * context, const SceGxmProgramParameter* location, matrix4x4 value);
 

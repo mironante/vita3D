@@ -4,6 +4,7 @@
 #include "ShaderProgram.hpp"
 #include "../entities/Camera.hpp"
 #include "../toolbox/Maths.hpp"
+#include "../entities/Light.hpp"
 
 
 using namespace Toolbox;
@@ -19,6 +20,7 @@ namespace Shaders
         void loadTransformationMatrix(SceGxmContext* context, matrix4x4 matrix);
         void loadProjectionMatrix(SceGxmContext* context, matrix4x4 projection);
         void loadViewMatrix(SceGxmContext* context, Camera* camera);
+        void loadLight(SceGxmContext* context, Light* light);
     private:
         SceGxmVertexAttribute* bindAttributes(const SceGxmProgram* vertexProgram, const SceGxmProgram* fragmentProgram, 
             unsigned int* attributeCount, SceGxmVertexStream* vertexStream);
@@ -33,6 +35,8 @@ namespace Shaders
         const SceGxmProgramParameter* location_transformationMatrix;
         const SceGxmProgramParameter* location_projectionMatrix;
         const SceGxmProgramParameter* location_viewMatrix;
+        const SceGxmProgramParameter* location_lightPosition;
+        const SceGxmProgramParameter* location_lightColor;
     };
 }
 

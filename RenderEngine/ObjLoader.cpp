@@ -33,8 +33,6 @@ namespace RenderEngine
 
         vector<VertexInfo> vertexInfos;
 
-        Vertex* outVertices;
-
 		while(!feof(fp))
 		{
 			//get first character
@@ -114,10 +112,11 @@ namespace RenderEngine
             int indicesCount = vertexInfos.size();
             uint16_t* indices = new uint16_t[indicesCount];
 
-            for(std::vector<int>::size_type i = 0; i != vertexInfos.size(); i++) {
-                int vertexPointer = vertexInfos[i].vertex - 1;
+            for(int i = 0; i < vertexInfos.size(); i++)
+            {
+                int vertexPointer  = vertexInfos[i].vertex - 1;
                 int texturePointer = vertexInfos[i].texture - 1;
-                int normalPointer = vertexInfos[i].normal - 1;
+                int normalPointer  = vertexInfos[i].normal - 1;
 
                 indices[i] = vertexPointer;
 
@@ -134,6 +133,8 @@ namespace RenderEngine
             }
 
             RawModel* model = loader->loadModel(verts, vertsCount, indices, indicesCount);
+            delete [] verts;
+            delete [] indices;
 			return model;
 		}
 }

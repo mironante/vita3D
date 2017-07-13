@@ -15,7 +15,7 @@ LIBS := -lSceLibKernel_stub -lSceDisplay_stub -lSceGxm_stub -lSceSysmodule_stub 
 SHADERS := shaders/clear_f.o shaders/clear_v.o shaders/vertexShader.o shaders/fragmentShader.o
 OBJS := RenderEngine/utils.o RenderEngine/DisplayManager.o models/RawModel.o models/TexturedModel.o RenderEngine/Loader.o  \
 		RenderEngine/Renderer.o shaders/ShaderProgram.o shaders/StaticShader.o textures/ModelTexture.o toolbox/Maths.o toolbox/math_utils.o \
-		entities/Entity.o main.o entities/Camera.o RenderEngine/ObjLoader.o $(SHADERS)
+		entities/Entity.o main.o entities/Camera.o RenderEngine/ObjLoader.o entities/Light.o $(SHADERS)
 
 all: package
 

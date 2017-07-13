@@ -50,7 +50,8 @@ namespace RenderEngine
         sceGxmTextureInitLinear(&texture, texture_data, SCE_GXM_TEXTURE_FORMAT_A8B8G8R8, width, height, 0);
         sceGxmTextureSetMinFilter(&texture, SCE_GXM_TEXTURE_FILTER_LINEAR);
         sceGxmTextureSetMagFilter(&texture, SCE_GXM_TEXTURE_FILTER_LINEAR);
-
+        sceGxmTextureSetUAddrMode(&texture, SCE_GXM_TEXTURE_ADDR_REPEAT);
+        sceGxmTextureSetVAddrMode(&texture, SCE_GXM_TEXTURE_ADDR_REPEAT);
         return texture;
     }
 }

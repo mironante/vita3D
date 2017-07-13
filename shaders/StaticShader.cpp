@@ -26,8 +26,9 @@ namespace Shaders
     {
         const SceGxmProgramParameter* positionParam = sceGxmProgramFindParameterByName(vertexProgram, "position");
         const SceGxmProgramParameter* textureCoordsParam = sceGxmProgramFindParameterByName(vertexProgram, "textureCoords");
+        const SceGxmProgramParameter* normalParam = sceGxmProgramFindParameterByName(vertexProgram, "normal");
 
-        int _attributeCount = 2;
+        int _attributeCount = 3;
         SceGxmVertexAttribute* vertexAttribute = new SceGxmVertexAttribute[_attributeCount];
         vertexAttribute[0].streamIndex = 0;
         vertexAttribute[0].offset = 0;
@@ -40,6 +41,12 @@ namespace Shaders
         vertexAttribute[1].format = SCE_GXM_ATTRIBUTE_FORMAT_F32;
         vertexAttribute[1].componentCount = 2;
         vertexAttribute[1].regIndex = sceGxmProgramParameterGetResourceIndex(textureCoordsParam);
+
+        vertexAttribute[2].streamIndex = 0;
+        vertexAttribute[2].offset = 5 * sizeof(float);
+        vertexAttribute[2].format = SCE_GXM_ATTRIBUTE_FORMAT_F32;
+        vertexAttribute[2].componentCount = 3;
+        vertexAttribute[2].regIndex = sceGxmProgramParameterGetResourceIndex(normalParam);
         *attributeCount = _attributeCount;
 
         vertexStream->stride = sizeof(Models::Vertex);
@@ -53,6 +60,8 @@ namespace Shaders
         location_transformationMatrix = getUniformLocation(vertexProgram, fragmentProgram, "transformationMatrix", true);
         location_projectionMatrix = getUniformLocation(vertexProgram, fragmentProgram, "projectionMatrix", true);
         location_viewMatrix = getUniformLocation(vertexProgram, fragmentProgram, "viewMatrix", true);
+        location_lightPosition = getUniformLocation(vertexProgram, fragmentProgram, "lightPosition", true);
+        location_lightColor = getUniformLocation(vertexProgram, fragmentProgram, "lightColor", true);
     }
 
     void StaticShader::loadTransformationMatrix(SceGxmContext* context, matrix4x4 matrix)
@@ -73,5 +82,11 @@ namespace Shaders
         delete [] data;
         
         loadMatrix(context, location_viewMatrix, _viewMatrix);
+    }
+
+    void StaticShader::loadLight(SceGxmContext* context, Light* light)
+    {
+        loadVector(context, location_lightPosition, light->getPosition(), true);
+        loadVector(context, location_lightColor, light->getColor(), true);
     }
 }
