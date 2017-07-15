@@ -24,9 +24,9 @@ namespace Shaders
     SceGxmVertexAttribute* StaticShader::bindAttributes(const SceGxmProgram* vertexProgram, const SceGxmProgram* fragmentProgram, 
         unsigned int* attributeCount, SceGxmVertexStream* vertexStream)
     {
-        const SceGxmProgramParameter* positionParam = sceGxmProgramFindParameterByName(vertexProgram, "position");
-        const SceGxmProgramParameter* textureCoordsParam = sceGxmProgramFindParameterByName(vertexProgram, "textureCoords");
-        const SceGxmProgramParameter* normalParam = sceGxmProgramFindParameterByName(vertexProgram, "normal");
+        const SceGxmProgramParameter* positionParam = sceGxmProgramFindParameterByName(vertexProgram, "IN.position");
+        const SceGxmProgramParameter* textureCoordsParam = sceGxmProgramFindParameterByName(vertexProgram, "IN.textureCoords");
+        const SceGxmProgramParameter* normalParam = sceGxmProgramFindParameterByName(vertexProgram, "IN.normal");
 
         int _attributeCount = 3;
         SceGxmVertexAttribute* vertexAttribute = new SceGxmVertexAttribute[_attributeCount];

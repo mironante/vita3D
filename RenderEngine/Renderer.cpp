@@ -22,8 +22,8 @@ namespace RenderEngine
     {
         TexturedModel* model = entity->getModel();
         RawModel* rawModel = model->getRawModel();
-        ModelTexture* modelTexture = model->getTexture();
-        SceGxmTexture texture = modelTexture->getModelTexture();
+        ModelTexture* tex = model->getTexture();
+        SceGxmTexture texture = model->getTexture()->getModelTexture();
 
         matrix4x4 transformationMatrix;
 
@@ -33,9 +33,7 @@ namespace RenderEngine
      
         shader->loadTransformationMatrix(context, transformationMatrix);
         shader->loadProjectionMatrix(context, _projectionMatrix);
-
-        shader->loadShineVariables(context, modelTexture->getShineDamper(), modelTexture->getReflectivity());
-
+        shader->loadShineVariables(context, tex->getShineDamper(), tex->getReflectivity());
         sceGxmSetFragmentTexture(context, 0, &texture);
         sceGxmSetVertexStream(context, 0, rawModel->getVertices());
 	    sceGxmDraw(context, SCE_GXM_PRIMITIVE_TRIANGLES, SCE_GXM_INDEX_FORMAT_U16, rawModel->getIndices(), rawModel->getIndexCount());

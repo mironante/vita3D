@@ -11,12 +11,13 @@ namespace Textures
         ModelTexture(SceGxmTexture texture);
 
         SceGxmTexture getModelTexture();
-        
+
         float getShineDamper();
         void setShineDamper(float shineDamper);
 
         float getReflectivity();
         void setReflectivity(float reflectivity);
+
     private:
         SceGxmTexture _texture;
         float _shineDamper;

@@ -5,8 +5,6 @@ namespace Textures
     ModelTexture::ModelTexture(SceGxmTexture texture)
     {
         _texture = texture;
-        _shineDamper = 1;
-        _reflectivity = 0;
     }
 
     SceGxmTexture ModelTexture::getModelTexture()

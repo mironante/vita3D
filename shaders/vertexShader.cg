@@ -28,30 +28,40 @@ float4x4 inverse(float4x4 input)
 	return transpose(cofactors) / determinant(input);
 }
 
-void main(
-	float3 position : POSITION,
-	float2 textureCoords : TEXCOORD0,
-	float3 normal : NORMAL,
-	uniform float4x4 transformationMatrix,
-	uniform float4x4 viewMatrix,
-	uniform float4x4 projectionMatrix,
-	uniform float3 lightPosition,
-	uniform float3 lightColor,
-	uniform float shineDamper,
-	uniform float reflectivity,
-	out float4 out_position : POSITION,
-	out float2 pass_textureCoords : TEXCOORD0,
-	out float3 diffuse : COLOR,
-	out float3 finalSpecular: COLOR1)
+uniform float4x4 transformationMatrix;
+uniform float4x4 viewMatrix;
+uniform float4x4 projectionMatrix;
+uniform float3 lightPosition;
+uniform float3 lightColor;
+uniform float shineDamper;
+uniform float reflectivity;
+
+struct Input
 {
-	float4 inPosition = float4(position, 1.0f);
+	float3 position : POSITION;
+	float2 textureCoords : TEXCOORD0;
+	float3 normal : NORMAL;
+};
+
+struct Output
+{
+	float4 out_position : POSITION;
+	float2 pass_textureCoords : TEXCOORD0;
+	float3 diffuse : COLOR0;
+	float3 finalSpecular : COLOR1;
+};
+
+Output main(Input IN)
+{
+	Output OUT;
+	float4 inPosition = float4(IN.position, 1.0f);
 	float4 worldPosition = mul(transformationMatrix, inPosition);
 	float4x4 mvp = mul(projectionMatrix, viewMatrix);
 
-	out_position = mul(mvp, worldPosition);
-	pass_textureCoords = textureCoords;
+	OUT.out_position = mul(mvp, worldPosition);
+	OUT.pass_textureCoords = IN.textureCoords;
 
-	float3 surfaceNormal = float3(mul(transformationMatrix, float4(normal, 0.0f)));
+	float3 surfaceNormal = float3(mul(transformationMatrix, float4(IN.normal, 0.0)));
 	float3 toLightVector = lightPosition - float3(mul(transformationMatrix, worldPosition));
 	float3 toCameraVector = float3(mul(inverse(viewMatrix), float4(0.0f, 0.0f, 0.0f, 1.0f)) - worldPosition);
 
@@ -61,14 +71,14 @@ void main(
 	float3 lightDirection = -unitLightVector;
 	float3 reflectedLightDirection = reflect(lightDirection, unitNormal);
 
-	float specularFactor = dot(reflectedLightDirection, unitVectorToCamera);
+ 	float specularFactor = dot(reflectedLightDirection, unitVectorToCamera);
 	specularFactor = max(specularFactor, 0.0f);
 	float dampedFactor = pow(specularFactor, shineDamper);
-	finalSpecular = dampedFactor * reflectivity * lightColor;
+	OUT.finalSpecular = dampedFactor * reflectivity * lightColor;
 
 	float nDotl = dot(unitNormal, unitLightVector);
-	float brightness = max(nDotl, 0.0f);
+	float brightness = max(nDotl, 0.0);
 
-	diffuse = brightness * lightColor;
-
+	OUT.diffuse = brightness * lightColor;
+	return OUT;
 }
